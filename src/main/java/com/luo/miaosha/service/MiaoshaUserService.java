@@ -14,8 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+
 @Service
 public class MiaoshaUserService {
+    private static final String COOKIE_NAME_TOKEN = "token";
     @Autowired
     private RedisService redisService;
     @Autowired
@@ -26,7 +30,7 @@ public class MiaoshaUserService {
         return user;
     }
 
-    public boolean login(LoginVo loginVo) {
+    public boolean login(HttpServletResponse resp, LoginVo loginVo) {
         if (loginVo == null) {
             //return CodeMsg.SERVER_ERROR;
             throw new GlobalException(CodeMsg.SERVER_ERROR);
@@ -48,7 +52,13 @@ public class MiaoshaUserService {
         //生成cookie
         String token = UUIDUtil.uuid();
         redisService.set(MiaoshaUserKey.token, token, user);
-return true;
+        //cookie 里面放token
+        Cookie cookie = new Cookie(COOKIE_NAME_TOKEN, token);
+
+        cookie.setMaxAge(MiaoshaUserKey.token.expireSeconds());
+        cookie.setPath("/");
+        resp.addCookie(cookie);
+        return true;
 
 
     }

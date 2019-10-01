@@ -15,6 +15,9 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+
 @Controller
 @RequestMapping("/login")
 @Slf4j
@@ -29,7 +32,7 @@ public class LoginController {
     }
     @RequestMapping("/login")
     @ResponseBody
-    public Result<Boolean> dbGet(LoginVo loginVo) {
+    public Result<Boolean> dbGet(HttpServletResponse resp, @Valid LoginVo loginVo) {
         String mobile = loginVo.getMobile();
         String inputPass = loginVo.getPassword();
         if (StringUtils.isEmpty(inputPass)) {
@@ -38,7 +41,7 @@ public class LoginController {
         if (StringUtils.isEmpty(mobile)) {
             return Result.error(CodeMsg.MOBILE_EMPTY);
         }
-        boolean result=userService.login(loginVo);
+        boolean result = userService.login(resp, loginVo);
 
         return Result.success(true);
     }
