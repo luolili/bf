@@ -1,17 +1,21 @@
 package com.luo.miaosha.controller;
 
 import com.luo.miaosha.domain.MiaoshaUser;
+import com.luo.miaosha.service.GoodsService;
 import com.luo.miaosha.service.MiaoshaUserService;
+import com.luo.miaosha.vo.GoodsVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @Controller
 @RequestMapping("/item")
@@ -20,6 +24,9 @@ public class ItemController {
 
     @Autowired
     private MiaoshaUserService userService;
+
+    @Autowired
+    private GoodsService goodsService;
 
     @RequestMapping("/to_list")
     public String itemList(Model model,
@@ -42,7 +49,36 @@ public class ItemController {
     @RequestMapping("/to_list2")
     public String itemList2(Model model, MiaoshaUser user) {
         model.addAttribute("user", user);
+        List<GoodsVo> goodsVoList = goodsService.getGoodsVoList();
+        model.addAttribute("goodsVoList", goodsVoList);
         return "item_list";
+    }
+
+    @RequestMapping("/to_detail/{goodsId}")
+    public String itemDetail(Model model, MiaoshaUser user, @PathVariable("goodsId") Integer goodsId) {
+        model.addAttribute("user", user);
+        GoodsVo goodsVo = goodsService.getGoodsVoById(goodsId);
+
+        long startTime = goodsVo.getStartDate().getTime();
+        long endTime = goodsVo.getEndDate().getTime();
+        long now = System.currentTimeMillis();
+        long remainSeconds;
+        Integer miaoshaStatus;
+        if (now < startTime) {
+            //没开始
+            miaoshaStatus = 0;
+            remainSeconds = startTime - now;
+        } else if (now > endTime) {//finished
+            miaoshaStatus = 2;
+            remainSeconds = -1;
+        } else {//进行中
+            miaoshaStatus = 1;
+            remainSeconds = 0;
+        }
+
+
+        model.addAttribute("goodsVoList", goodsVo);
+        return "item_detail";
     }
 
 }

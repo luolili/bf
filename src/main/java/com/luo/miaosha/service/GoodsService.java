@@ -16,7 +16,7 @@ public class GoodsService {
     @Autowired
     private GoodsMapper goodsMapper;
 
-    public Goods getUserById(Integer id) {
+    public Goods getById(Integer id) {
         Goods goods = goodsMapper.getById(id);
         return goods;
     }
@@ -25,5 +25,12 @@ public class GoodsService {
         List<GoodsVo> goodsVoList = goodsMapper.getGoodsVoList();
         return goodsVoList;
     }
+
+
+    public GoodsVo getGoodsVoById(Integer id) {
+        GoodsVo goods = goodsMapper.getGoodsVoById(id);
+        return goods;
+    }
+
 
 }
