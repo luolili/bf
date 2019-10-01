@@ -1,8 +1,11 @@
 package com.luo.miaosha.controller;
 
+import com.luo.miaosha.redis.MiaoshaUserKey;
 import com.luo.miaosha.result.CodeMsg;
 import com.luo.miaosha.result.Result;
 import com.luo.miaosha.service.MiaoshaUserService;
+import com.luo.miaosha.service.RedisService;
+import com.luo.miaosha.util.UUIDUtil;
 import com.luo.miaosha.vo.LoginVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("/login")
 @Slf4j
 public class LoginController {
+
     @Autowired
     private MiaoshaUserService userService;
     @RequestMapping("/to_login")
@@ -35,6 +39,7 @@ public class LoginController {
             return Result.error(CodeMsg.MOBILE_EMPTY);
         }
         boolean result=userService.login(loginVo);
-            return Result.success(true);
+
+        return Result.success(true);
     }
 }
