@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @Service
 public class MiaoshaUserService {
-    private static final String COOKIE_NAME_TOKEN = "token";
+    public static final String COOKIE_NAME_TOKEN = "token";
     @Autowired
     private RedisService redisService;
     @Autowired
@@ -55,11 +55,21 @@ public class MiaoshaUserService {
         //cookie 里面放token
         Cookie cookie = new Cookie(COOKIE_NAME_TOKEN, token);
 
-        cookie.setMaxAge(MiaoshaUserKey.token.expireSeconds());
+        cookie.setMaxAge(1000);
         cookie.setPath("/");
         resp.addCookie(cookie);
         return true;
 
+
+    }
+
+    public MiaoshaUser getByToken(String token) {
+
+        if (StringUtils.isEmpty(token)) {
+            return null;
+        }
+        MiaoshaUser user = redisService.get(MiaoshaUserKey.token, token, MiaoshaUser.class);
+        return user;
 
     }
 }

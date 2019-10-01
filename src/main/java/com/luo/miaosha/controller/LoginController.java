@@ -41,7 +41,7 @@ public class LoginController {
         if (StringUtils.isEmpty(mobile)) {
             return Result.error(CodeMsg.MOBILE_EMPTY);
         }
-        boolean result = userService.login(resp, loginVo);
+        userService.login(resp, loginVo);
 
         return Result.success(true);
     }
