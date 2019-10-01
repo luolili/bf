@@ -34,12 +34,7 @@ public class LoginController {
         if (StringUtils.isEmpty(mobile)) {
             return Result.error(CodeMsg.MOBILE_EMPTY);
         }
-        CodeMsg cm = userService.login(loginVo);
-        if (cm.getCode() == 0) {
+        boolean result=userService.login(loginVo);
             return Result.success(true);
-        }
-        else {
-            return Result.error(cm);
-        }
     }
 }
