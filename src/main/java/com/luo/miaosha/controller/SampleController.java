@@ -1,6 +1,7 @@
 package com.luo.miaosha.controller;
 
 import com.luo.miaosha.domain.User;
+import com.luo.miaosha.redis.UserKey;
 import com.luo.miaosha.result.Result;
 import com.luo.miaosha.service.RedisService;
 import com.luo.miaosha.service.UserService;
@@ -36,14 +37,18 @@ public class SampleController {
     @RequestMapping("/redis/get")
     @ResponseBody
     public Result<Long> redisGet(Model model) {
-        Long name = redisService.get("name", Long.class);
+        Long name = redisService.get(UserKey.getById,"name", Long.class);
         return Result.success(name);
     }
 
     @RequestMapping("/redis/set")
     @ResponseBody
-    public Result<Boolean> redisSet(Model model) {
-        boolean result = redisService.set("name2", "ki");
-        return Result.success(result);
+    public Result<User> redisSet(Model model) {
+        boolean result = redisService.set(UserKey.getById,"name2", "ki");
+        //String s=redisService.get(UserKey.getById,"name2", String.class);
+        User user=new User(1,"huy");
+        redisService.set(UserKey.getById, ""+user.getId(), user);
+        User user1 = redisService.get(UserKey.getById, "" + 1, User.class);
+        return Result.success(user1);
     }
 }
