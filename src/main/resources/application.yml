@@ -1,0 +1,23 @@
+spring:
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+  datasource:
+    url: jdbc:mysql://127.0.0.1/bf?serverTimezone=UTC&characterEncoding=utf-8&userSSL=false
+    username: root
+    password: 123
+    driver-class-name: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    filters: stat
+
+
+# mybatis
+mybatis:
+  type-aliases-package: com.luo.miaosha.dao
+  configuration:
+    map-underscore-to-camel-case: true
+    default-fetch-size: 100
+    default-statement-timeout: 5000
+  mapper-locations: classpath:com/luo/miaosha/dao/*.xml
+
+
