@@ -28,9 +28,8 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-
         HttpServletResponse resp = webRequest.getNativeRequest(HttpServletResponse.class);
-        HttpServletRequest req = webRequest.getNativeRequest(HttpServletRequest.class);
+        HttpServletRequest req = webRequest.getNativeResponse(HttpServletRequest.class);
 
         String paramToken = req.getParameter(MiaoshaUserService.COOKIE_NAME_TOKEN);
         String cookieToken = getCookieValue(req, MiaoshaUserService.COOKIE_NAME_TOKEN);
@@ -44,9 +43,7 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
     private String getCookieValue(HttpServletRequest req, String cookieNameToken) {
         Cookie[] cookies = req.getCookies();
         for (Cookie cookie : cookies) {
-
             if (cookieNameToken.equals(cookie.getName())) {
-
                 return cookie.getValue();
             }
 
