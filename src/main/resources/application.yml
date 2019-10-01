@@ -10,6 +10,15 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
     filters: stat
 
+redis:
+  host: localhost
+  port: 6379
+  #自定义的属性
+  timeout: 3
+  poolMaxIdle: 10
+  poolMaxTotal: 10
+  poolMaxWait: 3
+
 
 # mybatis
 mybatis:
@@ -21,3 +30,4 @@ mybatis:
   mapper-locations: classpath:com/luo/miaosha/dao/*.xml
 
 
+# redis
