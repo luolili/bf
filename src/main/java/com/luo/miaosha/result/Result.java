@@ -1,5 +1,6 @@
 package com.luo.miaosha.result;
 
+import com.sun.tools.javac.jvm.Code;
 import lombok.Getter;
 
 @Getter
@@ -16,5 +17,8 @@ public class Result<T> {
 
     public static<T> Result<T> success(T data) {
         return new Result<T>(200, "success", data);
+    }
+    public static<T> Result<T> error(CodeMsg codeMsg) {
+        return new Result<T>(codeMsg.getCode(), codeMsg.getMsg(), null);
     }
 }

@@ -17,6 +17,15 @@ public class MD5Util {
         String data = salt +formPass;
         return md5(data);
     }
+    public static String inputPassToDBPass(String input,String salt) {
+        String formPass = inputPassFormPass(input);
+        return  formPassToDBPass(formPass, salt);
+    }
 
+    public static void main(String[] args) {
+        String xe = inputPassToDBPass("123", "xe");
+
+        System.out.println(xe);//c10088331ab1a28a9c49bdc168095b0c
+    }
 
 }
