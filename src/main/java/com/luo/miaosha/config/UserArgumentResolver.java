@@ -2,6 +2,7 @@ package com.luo.miaosha.config;
 
 import com.luo.miaosha.domain.MiaoshaUser;
 import com.luo.miaosha.service.MiaoshaUserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -16,7 +17,8 @@ import javax.servlet.http.HttpServletResponse;
 
 @Service
 public class UserArgumentResolver implements HandlerMethodArgumentResolver {
-
+    @Autowired
+    private MiaoshaUserService userService;
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         Class<?> parameterType = parameter.getParameterType();
@@ -36,7 +38,7 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
             return null;
         }
         String token = StringUtils.isEmpty(paramToken) ? cookieToken : paramToken;
-        return null;
+        return userService.getByToken(resp, token);
     }
 
     private String getCookieValue(HttpServletRequest req, String cookieNameToken) {

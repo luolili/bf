@@ -38,4 +38,11 @@ public class ItemController {
         return "item_list";
     }
 
+
+    @RequestMapping("/to_list2")
+    public String itemList2(Model model, MiaoshaUser user) {
+        model.addAttribute("user", user);
+        return "item_list";
+    }
+
 }
