@@ -26,7 +26,7 @@ public class MiaoshaUserService {
     private MiaoshaUserMapper userMapper;
 
     public MiaoshaUser getUserById(Integer id) {
-        MiaoshaUser user=userMapper.getUserById(id);
+        MiaoshaUser user = userMapper.getUserById(id);
         return user;
     }
 
@@ -44,13 +44,14 @@ public class MiaoshaUserService {
         //验证密码
         String dbPass = user.getPassword();
         String saltDB = user.getSalt();
-       String calcPAss= MD5Util.formPassToDBPass(formPass, saltDB);
+        String calcPAss = MD5Util.formPassToDBPass(formPass, saltDB);
         if (!dbPass.equals(calcPAss)) {
             throw new GlobalException(CodeMsg.PASSWORD_ERROR);
         }
-//分布式session
+        //分布式session
         //生成cookie
-        addCookie(resp, user);
+        String token = UUIDUtil.uuid();
+        addCookie(resp, token, user);
         return true;
     }
 
@@ -60,15 +61,13 @@ public class MiaoshaUserService {
         }
         MiaoshaUser user = redisService.get(MiaoshaUserKey.token, token, MiaoshaUser.class);
         if (user != null) {
-            addCookie(resp, user);
+            addCookie(resp, token, user);
         }
-
         return user;
 
     }
 
-    public void addCookie(HttpServletResponse resp, MiaoshaUser user) {
-        String token = UUIDUtil.uuid();
+    public void addCookie(HttpServletResponse resp, String token, MiaoshaUser user) {
         redisService.set(MiaoshaUserKey.token, token, user);
         //cookie 里面放token
         Cookie cookie = new Cookie(COOKIE_NAME_TOKEN, token);
