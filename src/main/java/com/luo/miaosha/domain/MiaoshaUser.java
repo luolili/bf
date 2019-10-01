@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Data
@@ -11,6 +12,7 @@ import java.util.Date;
 @AllArgsConstructor
 public class MiaoshaUser {
     private Integer id;
+    @NotNull
     private String nickname;
     private String password;
     private String salt;
