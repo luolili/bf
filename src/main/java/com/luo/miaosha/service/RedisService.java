@@ -1,16 +1,11 @@
 package com.luo.miaosha.service;
 
 import com.alibaba.fastjson.JSON;
-import com.luo.miaosha.dao.UserMapper;
-import com.luo.miaosha.domain.User;
 import com.luo.miaosha.redis.KeyPrefix;
-import com.luo.miaosha.redis.RedisConfig;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
 
 @Service
 public class RedisService {
@@ -24,8 +19,7 @@ public class RedisService {
             jedis = jedisPool.getResource();
             String realKey = prefix.getPrefix()+key;
             String str = jedis.get(realKey);
-            T t = stringToBean(str, clazz);
-            return t;
+            return stringToBean(str, clazz);
         } finally {
             returnToPool(jedis);
         }
