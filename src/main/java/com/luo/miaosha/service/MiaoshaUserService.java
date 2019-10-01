@@ -50,26 +50,30 @@ public class MiaoshaUserService {
         }
 //分布式session
         //生成cookie
-        String token = UUIDUtil.uuid();
-        redisService.set(MiaoshaUserKey.token, token, user);
-        //cookie 里面放token
-        Cookie cookie = new Cookie(COOKIE_NAME_TOKEN, token);
-
-        cookie.setMaxAge(1000);
-        cookie.setPath("/");
-        resp.addCookie(cookie);
+        addCookie(resp, user);
         return true;
-
-
     }
 
-    public MiaoshaUser getByToken(String token) {
-
+    public MiaoshaUser getByToken(HttpServletResponse resp, String token) {
         if (StringUtils.isEmpty(token)) {
             return null;
         }
         MiaoshaUser user = redisService.get(MiaoshaUserKey.token, token, MiaoshaUser.class);
+        if (user != null) {
+            addCookie(resp, user);
+        }
+
         return user;
 
+    }
+
+    public void addCookie(HttpServletResponse resp, MiaoshaUser user) {
+        String token = UUIDUtil.uuid();
+        redisService.set(MiaoshaUserKey.token, token, user);
+        //cookie 里面放token
+        Cookie cookie = new Cookie(COOKIE_NAME_TOKEN, token);
+        cookie.setMaxAge(1000);
+        cookie.setPath("/");
+        resp.addCookie(cookie);
     }
 }

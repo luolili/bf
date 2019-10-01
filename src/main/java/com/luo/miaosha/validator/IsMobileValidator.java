@@ -23,8 +23,6 @@ return true;
 
     @Override
     public void initialize(IsMobile constraintAnnotation) {
-
          required = constraintAnnotation.required();
-
     }
 }
