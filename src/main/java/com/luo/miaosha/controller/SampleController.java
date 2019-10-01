@@ -39,4 +39,11 @@ public class SampleController {
         Long name = redisService.get("name", Long.class);
         return Result.success(name);
     }
+
+    @RequestMapping("/redis/set")
+    @ResponseBody
+    public Result<Boolean> redisSet(Model model) {
+        boolean result = redisService.set("name2", "ki");
+        return Result.success(result);
+    }
 }
