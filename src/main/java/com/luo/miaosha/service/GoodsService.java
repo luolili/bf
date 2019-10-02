@@ -1,8 +1,10 @@
 package com.luo.miaosha.service;
 
 import com.luo.miaosha.dao.GoodsMapper;
+import com.luo.miaosha.dao.MiaoshaGoodsMapper;
 import com.luo.miaosha.dao.UserMapper;
 import com.luo.miaosha.domain.Goods;
+import com.luo.miaosha.domain.MiaoshaGoods;
 import com.luo.miaosha.domain.User;
 import com.luo.miaosha.vo.GoodsVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,9 @@ public class GoodsService {
 
     @Autowired
     private GoodsMapper goodsMapper;
+
+    @Autowired
+    private MiaoshaGoodsMapper miaoshaGoodsMapper;
 
     public Goods getById(Integer id) {
         Goods goods = goodsMapper.getById(id);
@@ -33,4 +38,11 @@ public class GoodsService {
     }
 
 
+    public void reduceStock(GoodsVo goods) {
+
+        MiaoshaGoods g = new MiaoshaGoods();
+
+        g.setGoodsId(goods.getId());
+        miaoshaGoodsMapper.reduceStock(g);
+    }
 }
