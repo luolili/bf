@@ -33,12 +33,11 @@ public class MiaoshaOrderService {
     @Transactional
     public OrderInfo miaosha(MiaoshaUser user, GoodsVo goods) {
         //减少 库存
+        goodsService.reduceStock(goods);
 
-        goodsService.reduceStock(g);
-
-        orderService.createOrder(user, goods);
-        MiaoshaOrder miaoshaOrder = orderMapper.getByUserIdGoodsId(userId, goodsId);
-        return miaoshaOrder;
+        OrderInfo orderInfo = orderService.createOrder(user, goods);
+        MiaoshaOrder miaoshaOrder = orderMapper.getByUserIdGoodsId(user, goodsId);
+        return orderInfo;
     }
 
 

@@ -14,13 +14,14 @@ import java.util.Date;
 public class OrderInfo {
     private Integer id;
     private Integer userId;
+    private Integer goodsId;
     private Integer deliveryAddrId;
     @NotNull
     private String goodsName;
-    private String goodsCount;
+    private Integer goodsCount;
     private BigDecimal goodsPrice;
     private Integer goodsChannel;
     private Integer status;
-    private Date startDate;
-    private Date endDate;
+    private Date createDate;
+    private Date payDate;
 }
