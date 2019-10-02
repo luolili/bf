@@ -39,5 +39,8 @@ public class CodeMsg {
     public static CodeMsg success = new CodeMsg(0, "success");
     //order
     //public static CodeMsg success = new CodeMsg(0, "success");
+    //miaosha:5005XX
+    public static CodeMsg MIAOSHA_OVER = new CodeMsg(500500, "MIAOSHA_OVER");
+    public static CodeMsg REPEATE_MIAOSHA = new CodeMsg(500510, "repeate_miaosha");
 
 }

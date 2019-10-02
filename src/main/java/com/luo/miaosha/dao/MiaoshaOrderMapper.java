@@ -10,5 +10,10 @@ import org.apache.ibatis.annotations.Select;
 public interface MiaoshaOrderMapper {
 
     @Select("select * from miaosha_order where id = #{id}")
-    MiaoshaOrder getUserById(@Param("id") Integer id);
+    MiaoshaOrder getById(@Param("id") Integer id);
+
+    @Select("select * from miaosha_order where user_id = #{userId} and goods_id=#{goodsId}")
+    MiaoshaOrder getByUserIdGoodsId(@Param("userId") Integer userId, @Param("goodsId") Integer goodsId);
+
+
 }
