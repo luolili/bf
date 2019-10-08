@@ -2,6 +2,7 @@ package com.luo.miaosha.controller;
 
 import com.luo.miaosha.domain.MiaoshaOrder;
 import com.luo.miaosha.domain.MiaoshaUser;
+import com.luo.miaosha.domain.OrderInfo;
 import com.luo.miaosha.result.CodeMsg;
 import com.luo.miaosha.service.GoodsService;
 import com.luo.miaosha.service.MiaoshaOrderService;
@@ -72,35 +73,10 @@ public class MiaoshaItemController {
             model.addAttribute("errMsg", CodeMsg.REPEATE_MIAOSHA.getMsg());
             return "miaosha_fail";
         }
-
+        OrderInfo orderInfo = miaoshaOrderService.miaosha(user, goodsVo);
+        model.addAttribute("orderInfo", orderInfo);
         return "item_list";
     }
 
-    @RequestMapping("/to_detail/{goodsId}")
-    public String itemDetail(Model model, MiaoshaUser user, @PathVariable("goodsId") Integer goodsId) {
-        model.addAttribute("user", user);
-        GoodsVo goodsVo = goodsService.getGoodsVoById(goodsId);
-
-        long startTime = goodsVo.getStartDate().getTime();
-        long endTime = goodsVo.getEndDate().getTime();
-        long now = System.currentTimeMillis();
-        long remainSeconds;
-        Integer miaoshaStatus;
-        if (now < startTime) {
-            //没开始
-            miaoshaStatus = 0;
-            remainSeconds = startTime - now;
-        } else if (now > endTime) {//finished
-            miaoshaStatus = 2;
-            remainSeconds = -1;
-        } else {//进行中
-            miaoshaStatus = 1;
-            remainSeconds = 0;
-        }
-
-
-        model.addAttribute("goodsVoList", goodsVo);
-        return "item_detail";
-    }
 
 }

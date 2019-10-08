@@ -36,7 +36,7 @@ public class MiaoshaOrderService {
         goodsService.reduceStock(goods);
 
         OrderInfo orderInfo = orderService.createOrder(user, goods);
-        MiaoshaOrder miaoshaOrder = orderMapper.getByUserIdGoodsId(user, goodsId);
+        MiaoshaOrder miaoshaOrder = orderMapper.getByUserIdGoodsId(user.getId(), goods.getId());
         return orderInfo;
     }
 

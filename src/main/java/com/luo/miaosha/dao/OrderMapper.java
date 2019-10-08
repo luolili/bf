@@ -4,10 +4,7 @@ import com.luo.miaosha.domain.Goods;
 import com.luo.miaosha.domain.MiaoshaOrder;
 import com.luo.miaosha.domain.OrderInfo;
 import com.luo.miaosha.vo.GoodsVo;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -26,6 +23,7 @@ public interface OrderMapper {
 
     @Insert("insert into order_info (user_id, goods_id,goods_name,goods_count,goods_price,order_channel,status,create_date)" +
             "values (#{userId},#{goods_id},#{goods_count},#{goods_price},#{order_channel},#{status},#{createDate})")
+    @SelectKey(keyColumn = "id", keyProperty = "id", resultType = int.class, before = false, statement = "select last_insert_id()")
     Integer insert(OrderInfo orderInfo);
 
 
