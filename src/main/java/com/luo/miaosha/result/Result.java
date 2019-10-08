@@ -1,6 +1,5 @@
 package com.luo.miaosha.result;
 
-import com.sun.tools.javac.jvm.Code;
 import lombok.Getter;
 
 @Getter
