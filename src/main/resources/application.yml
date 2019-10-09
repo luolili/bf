@@ -2,6 +2,7 @@ spring:
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html
+    cache: false #防止页面修改后重启项目
   datasource:
     url: jdbc:mysql://127.0.0.1/bf?serverTimezone=UTC&characterEncoding=utf-8&userSSL=false
     username: root

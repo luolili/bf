@@ -1,18 +1,18 @@
 package com.luo.miaosha.controller;
 
 import com.luo.miaosha.domain.MiaoshaUser;
+import com.luo.miaosha.redis.GoodsKey;
 import com.luo.miaosha.service.GoodsService;
 import com.luo.miaosha.service.MiaoshaUserService;
+import com.luo.miaosha.service.RedisService;
 import com.luo.miaosha.vo.GoodsVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -27,6 +27,13 @@ public class ItemController {
 
     @Autowired
     private GoodsService goodsService;
+
+    @Autowired
+    private RedisService redisService;
+
+    @Autowired
+    private ThymeleafViewResolver thymeleafViewResolver;
+
 
     @RequestMapping("/to_list")
     public String itemList(Model model,
@@ -54,6 +61,27 @@ public class ItemController {
         return "item_list";
     }
 
+    // 页面静态化
+    @RequestMapping(value = "/to_list3", produces = "text/html")
+    @ResponseBody
+    public String itemList3(Model model, MiaoshaUser user) {
+        model.addAttribute("user", user);
+        List<GoodsVo> goodsVoList = goodsService.getGoodsVoList();
+        model.addAttribute("goodsVoList", goodsVoList);
+        //return "item_list";
+        String html = redisService.get(GoodsKey.getGoodsList, "", String.class);
+        if (!StringUtils.isEmpty(html)) {
+            return html;
+        }
+        //手动渲染
+        //SpringWebContext ctx = new SpringWebContext(req, resp);
+        html = thymeleafViewResolver.getTemplateEngine().process("item_list", null);
+        if (!StringUtils.isEmpty(html)) {
+            redisService.set(GoodsKey.getGoodsList, "", html);
+        }
+        return html;
+
+    }
     @RequestMapping("/to_detail/{goodsId}")
     public String itemDetail(Model model, MiaoshaUser user, @PathVariable("goodsId") Integer goodsId) {
         model.addAttribute("user", user);
