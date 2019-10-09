@@ -56,6 +56,17 @@ public class RedisService {
             returnToPool(jedis);
         }
     }
+
+    public boolean delete(KeyPrefix prefix, String key) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            String realKey = prefix.getPrefix() + key;
+            return jedis.del(realKey) > 0;
+        } finally {
+            returnToPool(jedis);
+        }
+    }
     public <T> Long incr(KeyPrefix prefix,String key) {
         Jedis jedis = null;
         try {

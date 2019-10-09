@@ -26,7 +26,16 @@ public class MiaoshaUserService {
     private MiaoshaUserMapper userMapper;
 
     public MiaoshaUser getUserById(Integer id) {
+        //取缓存
+        MiaoshaUser miaoshaUser = redisService.get(MiaoshaUserKey.getById, "" + id, MiaoshaUser.class);
+        if (miaoshaUser != null) {
+            return miaoshaUser;
+        }
+        //对象级别缓存
         MiaoshaUser user = userMapper.getUserById(id);
+        if (user != null) {
+            redisService.set(MiaoshaUserKey.getById, "" + id, user);
+        }
         return user;
     }
 
