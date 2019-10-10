@@ -1,13 +1,10 @@
 package com.luo.miaosha.controller;
 
-import com.luo.miaosha.domain.Goods;
-import com.luo.miaosha.domain.MiaoshaOrder;
 import com.luo.miaosha.domain.MiaoshaUser;
 import com.luo.miaosha.domain.OrderInfo;
 import com.luo.miaosha.result.CodeMsg;
 import com.luo.miaosha.result.Result;
 import com.luo.miaosha.service.GoodsService;
-import com.luo.miaosha.service.MiaoshaOrderService;
 import com.luo.miaosha.service.MiaoshaUserService;
 import com.luo.miaosha.service.OrderService;
 import com.luo.miaosha.vo.GoodsVo;
@@ -16,13 +13,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @Controller
@@ -40,23 +34,19 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
-
     @RequestMapping("/detail")
     @ResponseBody
     public Result<OrderDetailVO> itemList2(Model model, MiaoshaUser user, @RequestParam("orderId") Integer orderId) {
         model.addAttribute("user", user);
         if (user == null) {
-            // return "login";
             return Result.error(CodeMsg.SESSION_ERROR);
         }
         List<GoodsVo> goodsVoList = goodsService.getGoodsVoList();
         OrderInfo orderInfo = orderService.getById(orderId);
         if (orderInfo == null) {
             model.addAttribute("errMsg", CodeMsg.REPEATE_MIAOSHA.getMsg());
-            // return "miaosha_fail";
             return Result.error(CodeMsg.ORDER_NOT_EXIST);
         }
-        //return "item_list";
         Integer goodsId = orderInfo.getGoodsId();
         GoodsVo goodsVo = goodsService.getGoodsVoById(goodsId);
 
