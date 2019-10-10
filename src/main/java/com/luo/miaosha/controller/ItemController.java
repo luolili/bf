@@ -66,13 +66,14 @@ public class ItemController {
     @ResponseBody
     public String itemList3(Model model, MiaoshaUser user) {
         model.addAttribute("user", user);
-        List<GoodsVo> goodsVoList = goodsService.getGoodsVoList();
-        model.addAttribute("goodsVoList", goodsVoList);
-        //return "item_list";
         String html = redisService.get(GoodsKey.getGoodsList, "", String.class);
         if (!StringUtils.isEmpty(html)) {
             return html;
         }
+        List<GoodsVo> goodsVoList = goodsService.getGoodsVoList();
+        model.addAttribute("goodsVoList", goodsVoList);
+        //return "item_list";
+
         //手动渲染
         //SpringWebContext ctx = new SpringWebContext(req, resp);
         html = thymeleafViewResolver.getTemplateEngine().process("item_list", null);

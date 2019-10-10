@@ -4,6 +4,7 @@ import com.luo.miaosha.domain.MiaoshaOrder;
 import com.luo.miaosha.domain.MiaoshaUser;
 import com.luo.miaosha.domain.OrderInfo;
 import com.luo.miaosha.result.CodeMsg;
+import com.luo.miaosha.result.Result;
 import com.luo.miaosha.service.GoodsService;
 import com.luo.miaosha.service.MiaoshaOrderService;
 import com.luo.miaosha.service.MiaoshaUserService;
@@ -14,10 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -56,26 +54,31 @@ public class MiaoshaItemController {
 
 
     @RequestMapping("/do_miaosha")
-    public String itemList2(Model model, MiaoshaUser user, @RequestParam("goodsId") Integer goodsId) {
+    @ResponseBody
+    public Result<OrderInfo> itemList2(Model model, MiaoshaUser user, @RequestParam("goodsId") Integer goodsId) {
         model.addAttribute("user", user);
         if (user == null) {
-            return "login";
+            // return "login";
+            return Result.error(CodeMsg.SESSION_ERROR);
         }
         List<GoodsVo> goodsVoList = goodsService.getGoodsVoList();
         GoodsVo goodsVo = goodsService.getGoodsVoById(goodsId);
         Integer stockCount = goodsVo.getStockCount();
         if (stockCount <= 0) {
             model.addAttribute("errMsg", CodeMsg.MIAOSHA_OVER.getMsg());
-            return "miaosha_fail";
+            //return "miaosha_fail";
+            return Result.error(CodeMsg.MIAOSHA_OVER);
         }
         MiaoshaOrder miaoshaOrder = miaoshaOrderService.getByUserIdGoodsId(user.getId(), goodsId);
         if (miaoshaOrder != null) {
             model.addAttribute("errMsg", CodeMsg.REPEATE_MIAOSHA.getMsg());
-            return "miaosha_fail";
+            // return "miaosha_fail";
+            return Result.error(CodeMsg.REPEATE_MIAOSHA);
         }
         OrderInfo orderInfo = miaoshaOrderService.miaosha(user, goodsVo);
         model.addAttribute("orderInfo", orderInfo);
-        return "item_list";
+        //return "item_list";
+        return Result.success(orderInfo);
     }
 
 
