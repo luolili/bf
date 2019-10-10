@@ -20,10 +20,10 @@ public class OrderService {
     @Autowired
     private OrderMapper orderMapper;
 
-    public Goods getById(Integer id) {
-        //Goods goods = goodsMapper.getById(id);
+    public OrderInfo getById(Integer id) {
+        OrderInfo orderInfo = orderMapper.getById(id);
 
-        return null;
+        return orderInfo;
     }
 
     @Transactional
@@ -46,6 +46,7 @@ public class OrderService {
         orderMapper.insertMiaoshaOrder(miaoshaOrder);
         return orderInfo;
 
-
     }
+
+
 }

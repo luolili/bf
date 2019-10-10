@@ -38,6 +38,7 @@ public class CodeMsg {
     //item
     public static CodeMsg success = new CodeMsg(0, "success");
     //order
+    public static CodeMsg ORDER_NOT_EXIST = new CodeMsg(5004001, "订单不存在");
     //public static CodeMsg success = new CodeMsg(0, "success");
     //miaosha:5005XX
     public static CodeMsg MIAOSHA_OVER = new CodeMsg(500500, "MIAOSHA_OVER");
