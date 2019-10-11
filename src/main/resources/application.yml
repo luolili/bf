@@ -10,6 +10,14 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
     filters: stat
+  rabbitmq:
+    host: localhost
+    port: 5672
+    virtual-host: /
+    listener:
+      simple:
+        concurrency: 10
+        max-concurrency: 10
 
 redis:
   host: localhost

@@ -1,6 +1,7 @@
 package com.luo.miaosha.controller;
 
 import com.luo.miaosha.domain.User;
+import com.luo.miaosha.rabbitmq.MQSender;
 import com.luo.miaosha.redis.UserKey;
 import com.luo.miaosha.result.Result;
 import com.luo.miaosha.service.RedisService;
@@ -20,12 +21,21 @@ public class SampleController {
 
     @Autowired
     private RedisService redisService;
+
+    @Autowired
+    private MQSender mqSender;
+
+    @RequestMapping("/mq")
+    public String mq() {
+        mqSender.send("halo mm");
+        return "halo";
+    }
+
     @RequestMapping("/thmeleaf")
     public String halo(Model model) {
         model.addAttribute("name", "hu");
         return "halo";
     }
-
     @RequestMapping("/get")
     @ResponseBody
     public Result<User> dbGet(Model model) {

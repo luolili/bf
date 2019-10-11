@@ -35,6 +35,18 @@ public class MiaoshaItemController {
     @Autowired
     private MiaoshaOrderService miaoshaOrderService;
 
+    /**
+     * 接口优化：减少数据库访问
+     * 1.把商品库存放入 redis
+     * 2.redis 预减少库存
+     * 3.放入mq
+     *
+     * @param model
+     * @param cookieToken
+     * @param paramToken
+     * @param resp
+     * @return
+     */
     @RequestMapping("/to_list")
     public String itemList(Model model,
                            @CookieValue(value = MiaoshaUserService.COOKIE_NAME_TOKEN, required = false)
