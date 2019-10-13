@@ -128,19 +128,11 @@ public class MiaoshaOrderService {
         g.drawString(verifyCode, 8, 24);
         g.dispose();
         int rnd = calc(verifyCode);
-
         redisService.set(MiaoshaKey.getVefiryCode, user.getId() + "" + goodsId, rnd);
-
         return image;
-
-
     }
 
-    public static void main(String[] args) {
-        System.out.println(calc("2+3-7"));
-    }
-
-    private static int calc(String verifyCode) {
+    private int calc(String verifyCode) {
         ScriptEngineManager engineManager = new ScriptEngineManager();
         ScriptEngine js = engineManager.getEngineByName("JavaScript");
         try {
@@ -160,9 +152,21 @@ public class MiaoshaOrderService {
         int b = r.nextInt(10);
         int c = r.nextInt(10);
         char op = ops[r.nextInt(3)];
-        String exp = a + op + b + op + c + "";
-        return exp;
+        return a + op + b + op + c + "";
+
+    }
 
 
+    public boolean checkVerifyCode(MiaoshaUser user, Integer goodsId, int verifyCode) {
+
+        if (user == null || goodsId == null) {
+            return false;
+        }
+        Integer result = redisService.get(MiaoshaKey.getVefiryCode, user.getId() + "" + goodsId, Integer.class);
+        if (result == null || result - verifyCode != 0) {
+            return false;
+        }
+        redisService.delete(MiaoshaKey.getVefiryCode, user.getId() + "" + goodsId);
+        return true;
     }
 }

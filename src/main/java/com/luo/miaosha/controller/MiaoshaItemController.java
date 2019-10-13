@@ -189,7 +189,12 @@ public class MiaoshaItemController implements InitializingBean {
 
     @GetMapping("/path")
     @ResponseBody
-    public Result<String> miaoshaPath(Model model, MiaoshaUser user, @RequestParam("goodsId") Integer goodsId) {
+    public Result<String> miaoshaPath(Model model, MiaoshaUser user, @RequestParam("goodsId") Integer goodsId,
+                                      @RequestParam("verifyCode") int verifyCode) {
+        boolean right = miaoshaOrderService.checkVerifyCode(user, goodsId, verifyCode);
+        if (!right) {
+            return Result.error(CodeMsg.REQUEST_ILLEGAL);
+        }
         model.addAttribute("user", user);
         if (user == null) {
             return Result.error(CodeMsg.SESSION_ERROR);
