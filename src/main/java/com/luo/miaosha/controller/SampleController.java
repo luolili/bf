@@ -25,12 +25,25 @@ public class SampleController {
     @Autowired
     private MQSender mqSender;
 
+    @RequestMapping("/mq/fanout")
+    @ResponseBody
+    public String fanout() {
+        mqSender.sendFanout("halo mm");
+        return "halo";
+    }
     @RequestMapping("/mq")
+    @ResponseBody
+    public String mqTopic() {
+        mqSender.sendTopic("halo mm");
+        return "halo";
+    }
+
+    @RequestMapping("/mq")
+    @ResponseBody
     public String mq() {
         mqSender.send("halo mm");
         return "halo";
     }
-
     @RequestMapping("/thmeleaf")
     public String halo(Model model) {
         model.addAttribute("name", "hu");

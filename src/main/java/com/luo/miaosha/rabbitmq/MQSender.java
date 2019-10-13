@@ -25,4 +25,10 @@ public class MQSender {
         amqpTemplate.convertAndSend(MQConfig.TOPIC_EXCHANGE, "topic.key1", s);
         amqpTemplate.convertAndSend(MQConfig.TOPIC_EXCHANGE, "topic.key2", s);
     }
+
+    public void sendFanout(Object message) {
+        String s = RedisService.beanToString(message);
+        log.info("send topic msg:{}", s);
+        amqpTemplate.convertAndSend(MQConfig.FANOUT_EXCHANGE, "", s);
+    }
 }
