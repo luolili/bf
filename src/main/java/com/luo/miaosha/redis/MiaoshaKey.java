@@ -13,4 +13,5 @@ public class MiaoshaKey extends BaseKeyPrefix {
     }
 
     public static MiaoshaKey isGoodsOVer = new MiaoshaKey("go");
+    public static MiaoshaKey getMiaoshaPath = new MiaoshaKey(60, "mpath");
 }

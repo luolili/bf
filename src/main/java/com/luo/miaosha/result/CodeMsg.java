@@ -27,6 +27,7 @@ public class CodeMsg {
 
     public static CodeMsg SUCCESS = new CodeMsg(0, "success");
     public static CodeMsg SERVER_ERROR = new CodeMsg(500100, "server_error");
+    public static CodeMsg REQUEST_ILLEGAL = new CodeMsg(500102, "request_illegal");
     public static CodeMsg BIND_ERROR = new CodeMsg(500101, "%s");
     //login
     public static CodeMsg SESSION_ERROR = new CodeMsg(500210, "session_error");
