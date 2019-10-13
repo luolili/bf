@@ -42,13 +42,11 @@ public class MiaoshaOrderService {
     public OrderInfo miaosha(MiaoshaUser user, GoodsVo goods) {
         //减少 库存
         boolean success = goodsService.reduceStock(goods);
-
         if (success) {
             //同一个 用户可以 发送2个请求，秒杀2个同样的goods，创建2个订单
             //解决方法：卖超：创建user_id,goods_id的唯一索引在miaosha_order
             return orderService.createOrder(user, goods);
         }
-
         setGoodsOver(goods.getId());
         return null;
     }
@@ -61,7 +59,7 @@ public class MiaoshaOrderService {
     public Integer miaoshaResult(Integer userId, Integer goodsId) {
         MiaoshaOrder miaoshaOrder = getByUserIdGoodsId(userId, goodsId);
         if (miaoshaOrder != null) {
-            return miaoshaOrder.getId();//描述成功
+            return miaoshaOrder.getId();//秒杀成功
         } else {
             boolean isOver = getGoodsOver(goodsId);
             if (isOver) {
@@ -70,7 +68,6 @@ public class MiaoshaOrderService {
                 return 0;//排队中
             }
         }
-        //return miaoshaOrder.getId();//描述成功
     }
 
     private boolean getGoodsOver(Integer goodsId) {

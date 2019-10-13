@@ -18,13 +18,16 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/miaosha_goods")
 @Slf4j
 public class MiaoshaItemController implements InitializingBean {
 
+    private Map<Integer, Boolean> localOverMap = new HashMap<>();
     @Autowired
     private MiaoshaUserService userService;
 
@@ -72,10 +75,15 @@ public class MiaoshaItemController implements InitializingBean {
             // return "login";
             return Result.error(CodeMsg.SESSION_ERROR);
         }
-
-        //预减少库存
+        //内存标记
+        Boolean over = localOverMap.get(goodsId);
+        if (over) {
+            return Result.error(CodeMsg.MIAOSHA_OVER);
+        }
+        //预减少库存，当秒杀完了之后，之后的请求会重复请求redis
         Long stock = redisService.decr(GoodsKey.getMiaoshaGoodsStock, goodsId + "");
         if (stock < 0) {
+            localOverMap.put(goodsId, true);
             return Result.error(CodeMsg.MIAOSHA_OVER);
         }
         //判断是否秒杀到了
@@ -120,6 +128,7 @@ public class MiaoshaItemController implements InitializingBean {
         }
         for (GoodsVo goodsVo : goodsVoList) {
             redisService.set(GoodsKey.getMiaoshaGoodsStock, goodsVo.getId() + "", goodsVo.getStockCount());
+            localOverMap.put(goodsVo.getId(), false);//没结束
         }
 
     }
