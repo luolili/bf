@@ -3,6 +3,8 @@ package com.luo.miaosha.rabbitmq;
 import com.luo.miaosha.service.RedisService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessageProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +30,17 @@ public class MQSender {
 
     public void sendFanout(Object message) {
         String s = RedisService.beanToString(message);
-        log.info("send topic msg:{}", s);
+        log.info("send fanout msg:{}", s);
         amqpTemplate.convertAndSend(MQConfig.FANOUT_EXCHANGE, "", s);
+    }
+
+    public void sendHeaders(Object message) {
+        String s = RedisService.beanToString(message);
+        log.info("send headers msg:{}", s);
+        MessageProperties prop = new MessageProperties();
+        prop.setHeader("header1", "value1");
+        prop.setHeader("header2", "value2");
+        Message obj = new Message(s.getBytes(), prop);
+        amqpTemplate.convertAndSend(MQConfig.HEADERS_EXCHANGE, "", obj);
     }
 }

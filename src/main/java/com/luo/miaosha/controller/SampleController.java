@@ -25,12 +25,20 @@ public class SampleController {
     @Autowired
     private MQSender mqSender;
 
+    @RequestMapping("/mq/headers")
+    @ResponseBody
+    public String headers() {
+        mqSender.sendHeaders("halo mm");
+        return "halo";
+    }
+
     @RequestMapping("/mq/fanout")
     @ResponseBody
     public String fanout() {
         mqSender.sendFanout("halo mm");
         return "halo";
     }
+
     @RequestMapping("/mq")
     @ResponseBody
     public String mqTopic() {
