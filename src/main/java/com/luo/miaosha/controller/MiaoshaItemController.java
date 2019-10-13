@@ -20,7 +20,10 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.imageio.ImageIO;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -128,7 +131,7 @@ public class MiaoshaItemController implements InitializingBean {
                                    @RequestParam("goodsId") Integer goodsId,
                                    @PathVariable("path") String path) {
         boolean check = miaoshaOrderService.checkPath(user, goodsId, path);
-        if (check) {
+        if (!check) {
             return Result.error(CodeMsg.REQUEST_ILLEGAL);
         }
         model.addAttribute("user", user);
@@ -193,5 +196,26 @@ public class MiaoshaItemController implements InitializingBean {
         }
         String path = miaoshaOrderService.createPath(user, goodsId);
         return Result.success(path);
+    }
+
+    @GetMapping("/verifyCode")
+    @ResponseBody
+    public Result<String> verifyCode(Model model, MiaoshaUser user,
+                                     @RequestParam("goodsId") Integer goodsId,
+                                     HttpServletResponse resp) {
+        model.addAttribute("user", user);
+        if (user == null) {
+            return Result.error(CodeMsg.SESSION_ERROR);
+        }
+        BufferedImage image = miaoshaOrderService.createVerifyCode(user, goodsId);
+        try {
+            ServletOutputStream outputStream = resp.getOutputStream();
+            ImageIO.write(image, "JPEG", outputStream);
+            outputStream.flush();
+            outputStream.close();
+            return null;
+        } catch (Exception e) {
+            return Result.error(CodeMsg.MIAOSHA_FAIL);
+        }
     }
 }

@@ -31,6 +31,7 @@ public class CodeMsg {
     public static CodeMsg BIND_ERROR = new CodeMsg(500101, "%s");
     //login
     public static CodeMsg SESSION_ERROR = new CodeMsg(500210, "session_error");
+    public static CodeMsg MIAOSHA_FAIL = new CodeMsg(500210, "miaosha_fail");
     public static CodeMsg PASSWORD_EMPTY = new CodeMsg(500211, "password_empty");
     public static CodeMsg MOBILE_EMPTY = new CodeMsg(500212, "mobile_empty");
     public static CodeMsg MOBILE_NOT_EXIST = new CodeMsg(500214, "mobile_not_exist");
