@@ -5,6 +5,7 @@ import com.luo.miaosha.config.UserContext;
 import com.luo.miaosha.domain.MiaoshaUser;
 import com.luo.miaosha.redis.AccessKey;
 import com.luo.miaosha.result.CodeMsg;
+import com.luo.miaosha.result.Result;
 import com.luo.miaosha.service.MiaoshaUserService;
 import com.luo.miaosha.service.RedisService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,6 @@ public class AccessLimitInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-
         if (handler instanceof HandlerMethod) {
             MiaoshaUser user = getUser(request, response);
             UserContext.setUser(user);
@@ -44,7 +44,7 @@ public class AccessLimitInterceptor extends HandlerInterceptorAdapter {
                 String key = request.getRequestURI();
                 if (needLogin) {
                     if (user == null) {
-                        render(response, CodeMsg.REPEATE_MIAOSHA);
+                        render(response, CodeMsg.SESSION_ERROR);
                         return false;
                     }
                     key += "_" + user.getId();
@@ -65,13 +65,13 @@ public class AccessLimitInterceptor extends HandlerInterceptorAdapter {
 
             }
         }
-
         return true;
     }
 
     private void render(HttpServletResponse response, CodeMsg cm) throws IOException {
+        response.setContentType("application/json;charset=utf-8");
         ServletOutputStream out = response.getOutputStream();
-        String str = JSON.toJSONString(cm);
+        String str = JSON.toJSONString(Result.error(cm));
         out.write(str.getBytes(StandardCharsets.UTF_8));
         out.flush();
         out.close();

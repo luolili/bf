@@ -179,6 +179,7 @@ public class MiaoshaItemController implements InitializingBean {
     }
 
     //秒杀结果
+    @AccessLimit(seconds = 60, maxCount = 11, needLogin = true)
     @GetMapping("/result")
     @ResponseBody
     public Result<Integer> miaoshaResult(Model model, MiaoshaUser user, @RequestParam("goodsId") Integer goodsId) {
