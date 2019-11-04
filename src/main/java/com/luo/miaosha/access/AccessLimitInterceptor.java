@@ -34,6 +34,7 @@ public class AccessLimitInterceptor extends HandlerInterceptorAdapter {
             MiaoshaUser user = getUser(request, response);
             UserContext.setUser(user);
             HandlerMethod hm = (HandlerMethod) handler;
+            // get anno
             AccessLimit accessLimit = hm.getMethodAnnotation(AccessLimit.class);
             if (accessLimit == null) {
                 return true;
@@ -53,6 +54,7 @@ public class AccessLimitInterceptor extends HandlerInterceptorAdapter {
                     //
                 }
                 AccessKey accessKey = AccessKey.withExpire(seconds);
+                // use redis save count
                 Integer count = redisService.get(accessKey, key, Integer.class);
                 if (count == null) {
                     redisService.set(accessKey, key, 1);
